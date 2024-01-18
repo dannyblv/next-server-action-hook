@@ -1,8 +1,6 @@
 import { useState, useTransition } from "react";
 
-type ServerAction = (...args: any[]) => Promise<any>;
-
-const useServerAction = (action: ServerAction) => {
+const useServerAction = (action: (...args: any[]) => Promise<any>) => {
   const [loading, startTransition] = useTransition();
   const [error, setError] = useState<any>();
   const [data, setData] = useState<any>();
