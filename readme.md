@@ -69,7 +69,8 @@ The `run` function, when invoked it initiates the states `loading`, `error`, and
 
 ```ts
 useServerAction(action: () => Promise<any>): [
-  run: (...args: any[]) => Promise<{ data?: any; error?: any }>, clearError: () => void,
+  run: (...args: any[]) => Promise<{ data?: any; error?: any }>,
+  clearError: () => void,
   state: { loading: boolean; error?: any; data?: any }
 ]
 ```
