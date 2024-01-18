@@ -14,7 +14,9 @@ yarn add next-server-action-hook
 Showcase of handling a form submission with a server action
 ```ts
 // page.ts
-const FormPage = async () => {
+import Form from "./form";
+
+const FormPage = () => {
   const handleSubmit = async (formData: FormData) => {
     "use server";
 
@@ -26,39 +28,51 @@ const FormPage = async () => {
     }
 
     // your spot to handle the server stuff ...
-    return name;
-  }
+    return name as string;
+  };
 
   return <Form action={handleSubmit} />;
-}
+};
+
+export default FormPage;
 ```
 
 ```ts
-// Form.tsx (client)
+// form.tsx (client)
 "use client";
+import useServerAction from "next-server-action-hook";
 
-import useServerAction from 'next-server-action-hook';
-
-const Form = ({ action }: { action: () => Promise<string>}) => {
-
-  const [run, clearError, { error, loading, data: name }] = useServerAction(action);
+const Form = ({
+  action,
+}: {
+  action: (formData: FormData) => Promise<string>;
+}) => {
+  const [run, clearError, { error, loading, data: name }] =
+    useServerAction(action);
 
   return (
     <>
       {loading && <div>Loading...</div>}
       {error && <div>{error.message}</div>}
-      {data && <div>Hey {name}!</div>}
+      {name && <div>Hey {name}!</div>}
 
       <h1>Form</h1>
 
       <form action={run}>
         <label htmlFor="name">Name:</label>
-        <input type="text" id="name" name="name" />
+        <input
+          type="text"
+          id="name"
+          name="name"
+          onChange={() => clearError()}
+        />
         <button type="submit">Submit</button>
       </form>
     </>
-  )
+  );
 };
+
+export default Form;
 ```
 
 In the given example, `useServerAction` is utilized to manage the `handleSubmit` server action.

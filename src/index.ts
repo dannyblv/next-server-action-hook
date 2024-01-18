@@ -7,11 +7,11 @@ const useServerAction = (action: (...args: any[]) => Promise<any>) => {
 
   const clearError = () => setError(undefined);
 
-  const run = (...p: any[]) => new Promise<{ data?: any; error?: any }>((resolve) => {
+  const run = (..._args: any[]) => new Promise<{ data?: any; error?: any }>((resolve) => {
     startTransition(async () => {
       try {
         setError(undefined);
-        const data = await action(...p);
+        const data = await action(..._args);
         resolve({ data });
         setData(data);
       } catch (error) {
