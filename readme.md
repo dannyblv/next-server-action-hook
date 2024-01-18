@@ -1,52 +1,78 @@
 # Next.js Server Action Hook
-
-This package provides a React hook for handling Next.js server actions on the client side. It uses the built-in `useTransition` hook to manage loading states and error handling.
+This package offers a React hook for managing server actions in a Next.js client-side environment. It leverages the useTransition hook for efficient loading state and error management.
 
 ## Installation
-
 ```bash
 npm install next-server-action-hook
 ```
 or
-
 ```bash
 yarn add next-server-action-hook
 ```
 
 ## Usage
+Showcase of handling a form submission with a server action
 ```ts
-import useServerAction from 'next-server-action-hook';
+// page.ts
+const FormPage = async () => {
+  const handleSubmit = async (formData: FormData) => {
+    "use server";
 
-// Your server action
-const fetchUser = async (id) => {
-  const res = await fetch(`/api/user/${id}`);
-  const data = await res.json();
-  return data;
-};
+    const name = formData.get("name");
 
-function UserProfile({ id }) {
-  const [run, clearError, { loading, error, data }] = useServerAction(fetchUser);
+    // validation and error example
+    if (!name) {
+      throw new Error("Name is required");
+    }
 
-  useEffect(() => {
-    run(id);
-  }, [id]);
+    // your spot to handle the server stuff ...
+    return name;
+  }
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-
-  return (
-    <div>
-      <h1>{data.name}</h1>
-      <p>{data.email}</p>
-    </div>
-  );
+  return <Form action={handleSubmit} />;
 }
 ```
 
-In this example, useServerAction is used to handle the fetchUser server action. The run function is called with the id parameter to fetch the user data. The loading, error, and data states are used to render the component.
+```ts
+// Form.tsx (client)
+"use client";
+
+import useServerAction from 'next-server-action-hook';
+
+const Form = ({ action }: { action: () => Promise<string>}) => {
+
+  const [run, clearError, { error, loading, data: name }] = useServerAction(action);
+
+  return (
+    <>
+      {loading && <div>Loading...</div>}
+      {error && <div>{error.message}</div>}
+      {data && <div>Hey {name}!</div>}
+
+      <h1>Form</h1>
+
+      <form action={run}>
+        <label htmlFor="name">Name:</label>
+        <input type="text" id="name" name="name" />
+        <button type="submit">Submit</button>
+      </form>
+    </>
+  )
+};
+```
+
+In the given example, `useServerAction` is utilized to manage the `handleSubmit` server action.
+The `run` function, when invoked it initiates the states `loading`, `error`, and `data` - are dynamically updated based on the status and outcome of the promise operation,
+**providing real-time feedback that can be used to control the rendering of the component.**
 
 ## API
-`useServerAction(action: ServerAction): [run: (...args: any[]) => Promise<{ data?: any; error?: any }>, clearError: () => void, state: { loading: boolean; error?: any; data?: any }]`
+
+```ts
+useServerAction(action: () => Promise<any>): [
+  run: (...args: any[]) => Promise<{ data?: any; error?: any }>, clearError: () => void,
+  state: { loading: boolean; error?: any; data?: any }
+]
+```
 
 - `action`: The server action to handle. This should be a function that returns a Promise.
 - `run`: A function that calls the server action with the provided arguments and returns a Promise that resolves to an object with data and error properties.
