@@ -1,6 +1,9 @@
 # Next.js Server Action Hook
 This package offers a React hook for managing server actions in a Next.js client-side environment. It leverages the useTransition hook for efficient loading state and error management.
 
+## playground
+https://codesandbox.io/p/devbox/next-js-server-action-hook-y32wh8?file=%2Fapp%2Fform.tsx%3A20%2C26
+
 ## Installation
 ```bash
 npm install next-server-action-hook
@@ -47,12 +50,12 @@ const Form = ({
 }: {
   action: (formData: FormData) => Promise<string>;
 }) => {
-  const [run, clearError, { error, loading, data: name }] =
+  const [run, { error, isLoading, data: name }, clearError] =
     useServerAction(action);
 
   return (
     <>
-      {loading && <div>Loading...</div>}
+      {isLoading && <div>Loading...</div>}
       {error && <div>{error.message}</div>}
       {name && <div>Hey {name}!</div>}
 
@@ -76,7 +79,7 @@ export default Form;
 ```
 
 In the given example, `useServerAction` is utilized to manage the `handleSubmit` server action.
-The `run` function, when invoked it initiates the states `loading`, `error`, and `data` - are dynamically updated based on the status and outcome of the promise operation,
+The `run` function, when invoked it initiates the states `isLoading`, `error`, and `data` - are dynamically updated based on the status and outcome of the promise operation,
 **providing real-time feedback that can be used to control the rendering of the component.**
 
 ## API
@@ -84,15 +87,22 @@ The `run` function, when invoked it initiates the states `loading`, `error`, and
 ```ts
 useServerAction(action: () => Promise<any>): [
   run: (...args: any[]) => Promise<{ data?: any; error?: any }>,
-  clearError: () => void,
-  state: { loading: boolean; error?: any; data?: any }
+  state: { isLoading: boolean; error?: any; data?: any },
+  clearError: () => void
 ]
 ```
 
 - `action`: The server action to handle. This should be a function that returns a Promise.
 - `run`: A function that calls the server action with the provided arguments and returns a Promise that resolves to an object with data and error properties.
+- `state`: An object with `isLoading`, `error`, and `data` properties.
 - `clearError`: A function that clears the error state.
-- `state`: An object with `loading`, `error`, and `data` properties.
+
+## Updates 
+  - to v1.2.0 breaking
+    - `loading` is now `isLoading`.
+    - `clearError` is now the 3rd item in the returned array.
+
+
 
 ## License
 MIT

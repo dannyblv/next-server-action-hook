@@ -1,7 +1,7 @@
 import { useState, useTransition } from "react";
 
 const useServerAction = (action: (...args: any[]) => Promise<any>) => {
-  const [loading, startTransition] = useTransition();
+  const [isLoading, startTransition] = useTransition();
   const [error, setError] = useState<any>();
   const [data, setData] = useState<any>();
 
@@ -22,7 +22,7 @@ const useServerAction = (action: (...args: any[]) => Promise<any>) => {
     });
   });
 
-  return [run, clearError, {loading, error, data}] as const;
+  return [run, {isLoading, error, data}, clearError] as const;
 };
 
 export default useServerAction;
