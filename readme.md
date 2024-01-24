@@ -1,7 +1,7 @@
 # Next.js Server Action Hook
 This package offers a React hook for managing server actions in a Next.js client-side environment. It leverages the useTransition hook for efficient loading state and error management.
 
-## playground
+## Playground
 https://codesandbox.io/p/devbox/next-js-server-action-hook-y32wh8?file=%2Fapp%2Fform.tsx%3A20%2C26
 
 ## Installation
@@ -98,11 +98,9 @@ useServerAction(action: () => Promise<any>): [
 - `clearError`: A function that clears the error state.
 
 ## Updates 
-  - to v1.2.0 breaking
+  - to v1.2.1 breaking
     - `loading` is now `isLoading`.
     - `clearError` is now the 3rd item in the returned array.
-
-
 
 ## License
 MIT
