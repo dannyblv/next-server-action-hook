@@ -6,7 +6,8 @@
     "moduleResolution": "node",
     "outDir": "./dist",
     "strictNullChecks": true,
-    "target": "es5"
+    "target": "es5",
+    "esModuleInterop": true
   },
-  "include": ["src/*"]
+  "include": ["src/index.ts"]
 }
