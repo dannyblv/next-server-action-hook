@@ -52,7 +52,7 @@ const Form = ({
 }: {
   action: (formData: FormData) => Promise<string>;
 }) => {
-  const [run, { error, hasError, data: name }, clearError] =
+  const [run, {hasError, isLoading, data: name}, clearError] =
     useServerAction(action);
 
   return (

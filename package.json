@@ -1,5 +1,5 @@
 {
-  "version": "2.0.0",
+  "version": "2.0.1",
   "name": "next-server-action-hook",
   "description": "A React hook for handling Next.js server actions on the client side with built-in loading and error states.",
   "author": "Danny Braunstein",
