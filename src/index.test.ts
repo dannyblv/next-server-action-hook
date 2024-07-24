@@ -14,7 +14,7 @@ describe('useServerAction', () => {
     expect(result.current[1].isLoading).toBe(false);
     expect(mockAction).toHaveBeenCalled();
     expect(result.current[1].data).toBe('mockData');
-    expect(result.current[1].error).toBeUndefined();
+    expect(result.current[1].hasError).toBeFalsy();
   });
 
   it('handles server action error', async () => {
@@ -29,7 +29,7 @@ describe('useServerAction', () => {
 
     expect(result.current[1].isLoading).toBe(false);
     expect(mockAction).toHaveBeenCalled();
-    expect(result.current[1].error).toBe(mockError);
+    expect(result.current[1].hasError).toBeTruthy();
     expect(result.current[1].data).toBeUndefined();
   });
 
@@ -43,12 +43,12 @@ describe('useServerAction', () => {
       await waitForNextUpdate();
     });
 
-    expect(result.current[1].error).toBe(mockError);
+    expect(result.current[1].hasError).toBeTruthy();
 
     act(() => {
       result.current[2]();
     });
 
-    expect(result.current[1].error).toBeUndefined();
+    expect(result.current[1].hasError).toBeFalsy();
   });
 });

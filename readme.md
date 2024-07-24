@@ -52,13 +52,13 @@ const Form = ({
 }: {
   action: (formData: FormData) => Promise<string>;
 }) => {
-  const [run, { error, isLoading, data: name }, clearError] =
+  const [run, { error, hasError, data: name }, clearError] =
     useServerAction(action);
 
   return (
     <>
       {isLoading && <div>Loading...</div>}
-      {error && <div>{error.message}</div>}
+      {hasError && <div>Ooops something went wrong</div>}
       {name && <div>Hey {name}!</div>}
 
       <h1>Form</h1>
@@ -81,25 +81,28 @@ export default Form;
 ```
 
 In the given example, `useServerAction` is utilized to manage the `handleSubmit` server action.
-The `run` function, when invoked it initiates the states `isLoading`, `error`, and `data` - are dynamically updated based on the status and outcome of the promise operation,
+The `run` function, when invoked it initiates the states `isLoading`, `hasError`, and `data` - are dynamically updated based on the status and outcome of the promise operation,
 **providing real-time feedback that can be used to control the rendering of the component.**
 
 ## API
 
 ```ts
 useServerAction(action: () => Promise<any>): [
-  run: (...args: any[]) => Promise<{ data?: any; error?: any }>,
-  state: { isLoading: boolean; error?: any; data?: any },
+  run: (...args: any[]) => Promise<{ data?: any; }>,
+  state: { isLoading: boolean; hasError?: boolean; data?: any },
   clearError: () => void
 ]
 ```
 
 - `action`: The server action to handle. This should be a function that returns a Promise.
-- `run`: A function that calls the server action with the provided arguments and returns a Promise that resolves to an object with data and error properties.
-- `state`: An object with `isLoading`, `error`, and `data` properties.
+- `run`: A function that calls the server action with the provided arguments and returns a Promise that resolves to an object with data property.
+- `state`: An object with `isLoading`, `hasError`, and `data` properties.
 - `clearError`: A function that clears the error state.
 
 ## Updates 
+  - to v2.0.0 breaking
+    - `run` now returns an object with a `data` property.
+    - as nextjs production build doesn't expose the error object, the `hasError` property is now used to determine if an error occurred.
   - to v1.2.0 breaking
     - `loading` is now `isLoading`.
     - `clearError` is now the 3rd item in the returned array.
